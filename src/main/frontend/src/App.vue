@@ -46,10 +46,10 @@
                 this.authenticatedUsername = user.login;
             },
              register(user) {
-                this.error = ''
+                this.error = '';
                 this.$http.post('participants', user)
                   .then(response => {
-               this.registering=false;
+                     this.registering=false;
                })
             .catch(response => {
                this.error = "Nazwa użytkownika jest zajeta";
