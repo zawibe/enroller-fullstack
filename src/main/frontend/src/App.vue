@@ -20,17 +20,26 @@
     import "milligram";
     import LoginForm from "./LoginForm";
     import MeetingsPage from "./meetings/MeetingsPage";
-
     export default {
         components: {LoginForm, MeetingsPage},
         data() {
             return {
-                authenticatedUsername: ""
+                authenticatedUsername: "",
+                registering: false
             };
         },
         methods: {
             login(user) {
                 this.authenticatedUsername = user.login;
+            },
+            register(user){
+              this.$http.post('participants', user)
+              .then(response => {
+                //udalo sie
+              })
+              .catch(response => {
+                //nie udalo sie
+              });
             },
             logout() {
                 this.authenticatedUsername = '';
@@ -44,9 +53,7 @@
     max-width: 1000px;
     margin: 0 auto;
   }
-
   .logo {
     vertical-align: middle;
   }
 </style>
-
