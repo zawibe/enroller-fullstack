@@ -30,11 +30,7 @@
         },
         methods: {
             addNewMeeting(meeting) {
-                this.$http.post('meetings', meeting)
-                    .then(response => {
-                        this.meetings.push(response.body);
-                    });
-                this.getMeetings();
+                this.meetings.push(meeting);
             },
             addMeetingParticipant(meeting) {
                 meeting.participants.push(this.username);
