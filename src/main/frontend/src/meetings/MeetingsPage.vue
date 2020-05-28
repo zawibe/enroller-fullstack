@@ -30,40 +30,19 @@
             };
         },
         methods: {
-            getMeetings() {
-                this.$http.get('meetings')
-                .then(response => {this.meetings = response.body});
-            },
             addNewMeeting(meeting) {
-                this.$http.post('meetings', meeting)
-                .then(response => this.meetings.push(response.body));
-            	this.getMeetings()
+           //     this.$http.post()
+                this.meetings.push(meeting);
             },
             addMeetingParticipant(meeting) {
-               this.$http.post(`meetings/${meeting.id}/participants`, this.username)
-                .then(response => meeting.participants.push(response.body));
+                meeting.participants.push(this.username);
             },
             removeMeetingParticipant(meeting) {
                 meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
             },
             deleteMeeting(meeting) {
-                this.$http.delete(`meetings/${meeting.id}`, meeting);
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
-            },
-            getMeetingsParticipants() {
-                for (meeting in this.meetings) {
-                    this.$http.get(`meetings/'+meeting.id+'/participants`)
-                    .then(response => {meeting.participants = response.body});
-                }
-            },  
-            removeMeetingParticipant(meeting) {
-                this.$http.put(`meetings/${meeting.id}/participants`, this.username)
-                .then(() => meeting.participants.splice(meeting.participants.indexOf(this.username), 1));
             }
-        },
-        mounted() {
-           this.getMeetings();
-           this.getMeetingsParticipants();
-       },
+        }
     }
 </script>
