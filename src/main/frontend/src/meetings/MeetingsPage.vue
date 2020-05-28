@@ -30,44 +30,53 @@
             };
         },
          methods: {
-        	
             getMeetings() {
                 this.$http.get('meetings')
-                .then(response => {this.meetings = response.body});
+                    .then(response => { 
+                        this.meetings = response.body;
+                    })
             },
-            
             addNewMeeting(meeting) {
                 this.$http.post('meetings', meeting)
-                .then(response => this.meetings.push(response.body));
-            	this.getMeetings()
+                    .then(response => {
+                        this.meetings.push(response.body);
+                    });
+                this.getMeetings();
             },
-            
-            deleteMeeting(meeting) {
-                this.$http.delete(`meetings/${meeting.id}`, meeting);
-                this.meetings.splice(this.meetings.indexOf(meeting), 1);
-            },
-            getMeetingsParticipants() {
-                for (meeting in this.meetings) {
-                    this.$http.get(`meetings/'+meeting.id+'/participants`)
-                    .then(response => {meeting.participants = response.body});
-                }
-            },  
-            
             addMeetingParticipant(meeting) {
-                this.$http.post(`meetings/${meeting.id}/participants`, this.username)
-                .then(response => meeting.participants.push(response.body));
+                  meeting.participants.push(this.username);
+                this.$http.post('meetings/'+ meeting.id +'/participants', {login:this.username})
+                     .then(response => {
+                         console.log("udało się zapisac");
+                          this.getMeetings();
+                     })
+                     .catch(response => {
+                          console.log("nie udało się zapisac");
+                     });
             },
-            
             removeMeetingParticipant(meeting) {
-                this.$http.put(`meetings/${meeting.id}/participants`, this.username)
-                .then(() => meeting.participants.splice(meeting.participants.indexOf(this.username), 1));
+                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+                
+                this.$http.delete('meetings/'+ meeting.id + '/participants/' + this.username)
+                     .then(response => {
+                         console.log("udało się zapisac");
+                          this.getMeetings();
+                     })
+                     .catch(response => {
+                          console.log("nie udało się zapisac");
+                     });
             },
-            
+            deleteMeeting(meeting) {
+                this.$http.delete('meetings/' + meeting.id.toString())
+                    .then(response =>{
+                        this.meetings.splice(this.meetings.indexOf(meeting), 1);
+                    });
+                this.meetings.splice(this.meetings.indexOf(meeting), 1);
+                this.getMeetings();
+            }
         },
-        
-       mounted() {
-           this.getMeetings();
-           this.getMeetingsParticipants();
-       },
+        mounted() {
+            this.$nextTick(this.getMeetings());
+        }
     }
 </script>
