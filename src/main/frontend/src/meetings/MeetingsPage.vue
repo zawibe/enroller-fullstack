@@ -44,7 +44,8 @@
                 .then(response => meeting.participants.push(response.body));
             },
             removeMeetingParticipant(meeting) {
-                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+                this.$http.put(`meetings/${meeting.id}/participants`, this.username)
+                .then(() => meeting.participants.splice(meeting.participants.indexOf(this.username), 1));
             },
             deleteMeeting(meeting) {
                 this.$http.delete(`meetings/${meeting.id}`, meeting);
@@ -55,10 +56,6 @@
                     this.$http.get(`meetings/'+meeting.id+'/participants`)
                     .then(response => {meeting.participants = response.body});
                 }
-            },  
-            removeMeetingParticipant(meeting) {
-                this.$http.put(`meetings/${meeting.id}/participants`, this.username)
-                .then(() => meeting.participants.splice(meeting.participants.indexOf(this.username), 1));
             }
         },
         mounted() {
